@@ -24,8 +24,8 @@ import { Sun, Moon, ArrowRight } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const formSchema = z.object({
-  username: z.string().min(3, {
-    message: 'Username must be at least 3 characters.',
+  email: z.string().min(3, {
+    message: 'email must be at least 3 characters.',
   }),
   password: z.string().min(6, {
     message: 'Password must be at least 6 characters.',
@@ -45,7 +45,7 @@ const LoginPage = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
     },
   });
@@ -59,7 +59,7 @@ const LoginPage = () => {
   const onSubmit = async (values: FormValues) => {
     try {
       const credentials = {
-        username: values.username,
+        email: values.email,
         password: values.password
       };
       
@@ -128,12 +128,12 @@ const LoginPage = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="username"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your username" {...field} />
+                      <Input placeholder="Enter your email" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -192,7 +192,7 @@ const LoginPage = () => {
         <CardFooter className="flex justify-center text-sm text-muted-foreground">
           <div>
             {activeTab === 'dummy' && (
-              <p>For demo use: Username: <strong>himanshubisen@gmail.com</strong>, Password: <strong>123456</strong></p>
+              <p>For demo use: email: <strong>himanshubisen@gmail.com</strong>, Password: <strong>123456</strong></p>
             )}
             {activeTab === 'mongodb' && (
               <p>Register to create a MongoDB account</p>

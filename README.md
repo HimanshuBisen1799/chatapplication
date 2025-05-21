@@ -32,7 +32,7 @@ This project is a React-based single-page application that demonstrates key fron
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/feed-app.git
+   git clone https://github.com/HimanshuBisen1799/chatapplication.git
    cd feed-app
    ```
 
