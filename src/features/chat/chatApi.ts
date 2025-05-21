@@ -9,12 +9,10 @@ let socket: Socket | null = null;
 // Connect to the Socket.IO server
 const connectSocket = (dispatch: any, token: string, chatId: string) => {
   if (socket && socket.connected) {
-    // Join new chat room if already connected
     socket.emit('join_chat', chatId);
     return socket;
   }
 
-  // Create socket connection
   socket = io('https://healthgoods-data-backend.onrender.com', {
     path: '/socket.io',
     auth: {
@@ -26,7 +24,6 @@ const connectSocket = (dispatch: any, token: string, chatId: string) => {
     reconnectionDelay: 1000,
   });
 
-  // Handle incoming messages
   socket.on('new_message', ({ chatId, message }) => {
     dispatch(
       addMessage({
@@ -39,14 +36,12 @@ const connectSocket = (dispatch: any, token: string, chatId: string) => {
     );
   });
 
-  // Connection status
   socket.on('connect', () => {
     console.log('Connected to chat server');
     socket?.emit('join_chat', chatId);
     dispatch(setConnected(true));
   });
 
-  // Handle errors
   socket.on('connect_error', (error: Error) => {
     console.error('Socket.IO connection error:', error);
     dispatch(setConnected(false));
@@ -60,7 +55,6 @@ const connectSocket = (dispatch: any, token: string, chatId: string) => {
   return socket;
 };
 
-// Close socket connection
 const disconnectSocket = () => {
   if (socket) {
     socket.disconnect();
@@ -68,7 +62,6 @@ const disconnectSocket = () => {
   }
 };
 
-// Define the base query for the API
 export const chatApi = createApi({
   reducerPath: 'chatApi',
   baseQuery: fetchBaseQuery({
@@ -82,12 +75,10 @@ export const chatApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    // Connect to chat server
     connectToChat: builder.mutation<{ success: boolean }, { chatId: string }>({
       queryFn: async ({ chatId }, { dispatch, getState }) => {
         try {
           const token = (getState() as RootState).auth.token;
-
           if (!token) {
             return {
               error: {
@@ -96,11 +87,9 @@ export const chatApi = createApi({
               },
             };
           }
-
           connectSocket(dispatch, token, chatId);
           return { data: { success: true } };
         } catch (error) {
-          console.error('Failed to connect to chat:', error);
           return {
             error: {
               status: 'CUSTOM_ERROR',
@@ -111,33 +100,13 @@ export const chatApi = createApi({
       },
     }),
 
-    // Fetch chat history
-    getChatHistory: builder.query<
-      { success: boolean; data: { messages: any[] } },
-      string
-    >({
+    getChatHistory: builder.query<{ messages: any[] }, string>({
       query: (chatId) => `/chats/${chatId}`,
-      async onQueryStarted(chatId, { dispatch, getState }) {
-        try {
-          const result = await this.query({ chatId });
-          const userId = (getState() as RootState).auth.user?.id;
-          if (result.data?.success) {
-            const messages = result.data.data.messages.map((msg: any) => ({
-              id: msg._id,
-              text: msg.content,
-              sentByMe: msg.sender._id === userId,
-              timestamp: msg.createdAt,
-              senderName: msg.sender.name || 'Unknown',
-            }));
-            dispatch(setMessages(messages));
-          }
-        } catch (error) {
-          console.error('Failed to fetch chat history:', error);
-        }
+      transformResponse: (response: { success: boolean; data: { messages: any[] } }) => {
+        return response.data;
       },
     }),
 
-    // Send a message
     sendMessage: builder.mutation<
       { success: boolean; data: any },
       { chatId: string; content: string }
@@ -150,21 +119,21 @@ export const chatApi = createApi({
       async onQueryStarted({ chatId, content }, { dispatch, getState }) {
         try {
           const user = (getState() as RootState).auth.user;
-          const optimisticMessage = {
-            id: Date.now(),
-            text: content,
-            sentByMe: true,
-            timestamp: new Date().toISOString(),
-            senderName: user?.username || 'You',
-          };
-          dispatch(addMessage(optimisticMessage));
+          dispatch(
+            addMessage({
+              id: Date.now(),
+              text: content,
+              sentByMe: true,
+              timestamp: new Date().toISOString(),
+              senderName: user?.username || 'You',
+            })
+          );
         } catch (error) {
           console.error('Failed to send message:', error);
         }
       },
     }),
 
-    // Get or create chat with a user
     getOrCreateChat: builder.mutation<
       { success: boolean; chatId: string },
       { userId: string }
@@ -175,14 +144,12 @@ export const chatApi = createApi({
       }),
     }),
 
-    // Disconnect from chat
     disconnectFromChat: builder.mutation<{ success: boolean }, void>({
       queryFn: async () => {
         try {
           disconnectSocket();
           return { data: { success: true } };
         } catch (error) {
-          console.error('Failed to disconnect from chat:', error);
           return {
             error: {
               status: 'CUSTOM_ERROR',
