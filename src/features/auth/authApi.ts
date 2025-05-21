@@ -7,13 +7,13 @@ import { setCredentials, logout, User } from './authSlice';
 const BACKEND_URL = 'https://healthgoods-data-backend.onrender.com/api';
 
 export interface LoginRequest {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface RegisterRequest {
   username: string;
-  username: string;
+  email: string;
   password: string;
   firstName?: string;
   lastName?: string;
@@ -22,7 +22,7 @@ export interface RegisterRequest {
 export interface AuthResponse {
   id: string;
   username: string;
-  username: string;
+  email: string;
   firstName?: string;
   lastName?: string;
   gender?: string;
@@ -58,7 +58,7 @@ export const authApi = createApi({
               user: {
                 id: data.id,
                 username: data.username,
-                username: data.username,
+                email: data.email,
                 firstName: data.firstName,
                 lastName: data.lastName,
                 gender: data.gender,
@@ -88,7 +88,7 @@ export const authApi = createApi({
               user: {
                 id: data.id,
                 username: data.username,
-                username: data.username,
+                email: data.email,
                 firstName: data.firstName,
                 lastName: data.lastName,
                 gender: data.gender,

@@ -51,7 +51,7 @@ const Navbar = () => {
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={user.image} alt={user.username} />
                   <AvatarFallback>
-                    {user.firstName?.charAt(0) || user.username.charAt(0)}
+                    {user.firstName?.charAt(0) || user.username}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -61,7 +61,7 @@ const Navbar = () => {
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={user.image} alt={user.username} />
                   <AvatarFallback>
-                    {user.firstName?.charAt(0) || user.username.charAt(0)}
+                    {user.firstName?.charAt(0) || user.username}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col space-y-0.5">
