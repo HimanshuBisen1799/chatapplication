@@ -12,7 +12,7 @@ const connectSocket = (dispatch: any, token: string) => {
   if (socket) return socket;
 
   // Create socket connection
-  socket = io('http://localhost:5000', {
+  socket = io('https://healthgoods-data-backend.onrender.com/api', {
     auth: {
       token
     },
