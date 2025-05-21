@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useTheme } from "../contexts/ThemeContext";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,9 +11,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
-  const user = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  
+  // Parse the user from localStorage
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
 
   const handleLogout = () => {
     dispatch(logout());
@@ -49,9 +51,8 @@ const Navbar = () => {
             <PopoverTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.image} alt={user.username} />
                   <AvatarFallback>
-                    {user.firstName?.charAt(0) || user.username}
+                    {user.username?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -59,16 +60,15 @@ const Navbar = () => {
             <PopoverContent className="w-56 p-2" align="end">
               <div className="flex items-center gap-2 p-2">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.image} alt={user.username} />
                   <AvatarFallback>
-                    {user.firstName?.charAt(0) || user.username}
+                    {user.username?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col space-y-0.5">
                   <p className="text-sm font-medium">
-                    {user.firstName} {user.lastName}
+                    {user.username}
                   </p>
-                  <p className="text-xs text-muted-foreground">@{user.username}</p>
+                  <p className="text-xs text-muted-foreground">{user.email}</p>
                 </div>
               </div>
               <div className="mt-2">

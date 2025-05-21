@@ -65,6 +65,7 @@ const LoginPage = () => {
       
       if (activeTab === 'mongodb') {
         await login(credentials).unwrap();
+        localStorage.setItem('user', JSON.stringify({ email: values.email, username: values.email.split('@')[0] }));
       } else {
         await dummyLogin(credentials).unwrap();
       }
