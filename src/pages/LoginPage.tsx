@@ -102,10 +102,10 @@ const LoginPage = () => {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="mongodb" onValueChange={setActiveTab} className="mb-4">
-            <TabsList className="grid w-full grid-cols-2">
+            {/* <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="mongodb">MongoDB</TabsTrigger>
               <TabsTrigger value="dummy">Demo API</TabsTrigger>
-            </TabsList>
+            </TabsList> */}
           </Tabs>
           
           {activeTab === 'mongodb' && isError && (
